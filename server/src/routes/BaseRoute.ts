@@ -1,9 +1,10 @@
-import { Router } from "express";
+import { Router } from 'express';
 
-import { index } from "../controller/BaseController";
+import { index, postJob } from '../controller/BaseController';
 
 const router = Router();
 
-router.get("/", index);
+router.get('/', index);
+router.get('/send-email', postJob);
 
 export default router;
