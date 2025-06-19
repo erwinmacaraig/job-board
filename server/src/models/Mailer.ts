@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import * as nodemailer from 'nodemailer';
 import { MailOptionsInterface } from '../Interfaces/MailOptionsInterface';
 import Mail from 'nodemailer/lib/mailer';
+import config from '../config/config';
 
 export class Mailer {
   public transporter: Mail;
@@ -12,7 +13,7 @@ export class Mailer {
     text: '',
     html: '',
   };
-  private emailFrom = 'mister.m.codes@gmail.com';
+
   constructor() {
     this.transporter = nodemailer.createTransport({
       service: 'Gmail',
@@ -20,14 +21,14 @@ export class Mailer {
       port: 465,
       secure: true,
       auth: {
-        user: 'mister.m.codes@gmail.com',
-        pass: 'ttddvmivkeupujzx',
+        user: config.email,
+        pass: config.mailPassword,
       },
     });
   }
 
   public setMailOptions(to: string, subject: string, message: string) {
-    this.mailOptions['from'] = this.emailFrom;
+    this.mailOptions['from'] = config.email;
     this.mailOptions['to'] = to;
     this.mailOptions['subject'] = subject;
     this.mailOptions.text = message;
