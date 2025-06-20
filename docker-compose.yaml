@@ -1,4 +1,18 @@
 services:
+  job_board_mongodb:
+    image: "mongodb/mongodb-community-server:latest"
+    container_name: job_board_mongodb
+    restart: always
+    # environment:
+    #   - "MONGO_INITDB_DATABASE=admin"
+    #   - "MONGO_INITDB_ROOT_USERNAME=mongodbuser"
+    #   - "MONGO_INITDB_ROOT_PASSWORD=mongodbpasswd"
+    volumes:
+      - "./mongo_database:/data/db"
+    ports:
+      - "27017:27017"
+    networks:
+      - backend
   job_board_express:
     container_name: job_board_express
     restart: always
@@ -9,24 +23,14 @@ services:
       - "3000:3000"
     networks:
       - backend
+    depends_on:
+      - "job_board_mongodb"
+    links:
+      - job_board_mongodb
     volumes:
       - ./server:/opt/app
       - /opt/app/node_modules
 
-  job_board_mongodb:
-    image: "mongodb/mongodb-community-server:latest"
-    container_name: job_board_mongodb
-    restart: always
-    environment:
-      - "MONGO_INITDB_DATABASE=admin"
-      - "MONGO_INITDB_ROOT_USERNAME=mongodbuser"
-      - "MONGO_INITDB_ROOT_PASSWORD=mongodbpasswd"
-    volumes:
-      - "./mongo_database:/data/db"
-    ports:
-      - "27017:27017"
-    networks:
-      - backend
   job_board_gui:
     container_name: job_board_gui
     restart: always
