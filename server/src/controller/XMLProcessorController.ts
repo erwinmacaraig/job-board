@@ -1,13 +1,16 @@
-import app from './app';
-import config from './config/config';
-import { MyMongoDB } from './models/MyMongoDB';
+import { Request, Response, NextFunction } from 'express';
 import { XMLParser } from 'fast-xml-parser';
+import { MyMongoDB } from '../models/MyMongoDB';
 import { Db } from 'mongodb';
 
-const updateLocalDBListingFromExternal = async () => {
+export const getExternalJobPosts = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  const url = 'https://mrge-group-gmbh.jobs.personio.de/xml';
+  console.log('You are now about to fetch external dara');
   try {
-    const url = 'https://mrge-group-gmbh.jobs.personio.de/xml';
-    console.log('You are now about to fetch external dara');
     const response = await fetch(url);
     if (!response.ok) {
       throw new Error(
@@ -23,16 +26,8 @@ const updateLocalDBListingFromExternal = async () => {
     const result = await postCollections.insertMany(
       jsonData['workzag-jobs']['position'],
     );
+    res.send(jsonData['workzag-jobs']['position']);
   } catch (error) {
     console.error('Error fetching data:', error);
   }
 };
-
-app.listen(config.port, async () => {
-  const mongo = new MyMongoDB();
-  // connect to mongodb
-  await mongo.connect();
-  // updateLocalDBListingFromExternal();
-
-  console.log(`Listening for incomming connections on port ${config.port}`);
-});
