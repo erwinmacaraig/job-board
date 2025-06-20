@@ -1,54 +1,52 @@
-services:  
+services:
   job_board_express:
     container_name: job_board_express
     restart: always
-    hostname: express
     build:
       context: ./server
       dockerfile: Dockerfile
-    ports: 
+    ports:
       - "3000:3000"
     networks:
-      - backend    
+      - backend
     volumes:
-      - ./server:/opt/app   
+      - ./server:/opt/app
       - /opt/app/node_modules
-      
+
   job_board_mongodb:
     image: "mongodb/mongodb-community-server:latest"
     container_name: job_board_mongodb
-    hostname: mongodb
     restart: always
     environment:
       - "MONGO_INITDB_DATABASE=admin"
       - "MONGO_INITDB_ROOT_USERNAME=mongodbuser"
-      - "MONGO_INITDB_ROOT_PASSWORD=mongodbpasswd"       
+      - "MONGO_INITDB_ROOT_PASSWORD=mongodbpasswd"
     volumes:
-     - "./mongo_database:/data/db"
-    ports: 
-      - "27017:27017" 
+      - "./mongo_database:/data/db"
+    ports:
+      - "27017:27017"
     networks:
       - backend
   job_board_gui:
     container_name: job_board_gui
+    restart: always
     build:
       context: ./frontend
       dockerfile: Dockerfile
-    ports: 
+    ports:
       - "80:8081"
     depends_on:
       - job_board_express
     networks:
-      - frontend 
+      - frontend
       - backend
     links:
       - job_board_express
     volumes:
       - ./frontend:/opt/app
       - /opt/app/node_modules
-      
+
 networks:
   frontend:
   backend:
     driver: bridge
-   

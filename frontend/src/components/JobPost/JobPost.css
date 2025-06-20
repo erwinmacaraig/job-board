@@ -1,0 +1,19 @@
+div.card {
+  border: 1px solid #ccc;
+  border-radius: 16px;
+  padding: 10px;
+  margin: 10px;
+}
+
+.job-title {
+  font-size: 1.5em;
+  margin-top: 0.5em;
+  margin-bottom: 0.2em;
+  font-weight: bold;
+  display: block;
+}
+
+.location {
+  font-size: 0.93em;
+  font-weight: bold;
+}
